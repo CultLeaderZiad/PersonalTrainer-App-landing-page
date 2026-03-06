@@ -20,7 +20,7 @@ export default function TextReveal({ text, className = "" }: TextRevealProps) {
 
     return (
         <div ref={containerRef} className={`relative overflow-hidden ${className}`}>
-            <motion.div style={{ opacity, y }}>
+            <motion.div style={{ opacity, y }} className="relative">
                 {text}
             </motion.div>
         </div>

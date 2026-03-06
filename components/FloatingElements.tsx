@@ -12,7 +12,7 @@ export default function FloatingElements() {
     const rotate2 = useTransform(scrollY, [0, 2000], [0, -45])
 
     return (
-        <div className="absolute inset-0 pointer-events-none overflow-hidden z-[-1]">
+        <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
             <motion.div
                 style={{ y: y1, rotate: rotate1 }}
                 className="absolute top-20 right-[10%] w-64 h-64 border border-amber-500/10 rounded-full blur-sm"
