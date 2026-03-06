@@ -16,7 +16,7 @@ export default function HeroSection({ onCTAClick }: HeroSectionProps) {
       <div className="absolute top-1/3 left-1/4 w-[500px] h-[500px] bg-accent/5 rounded-full blur-[90px] opacity-30" />
 
       {/* Background Image Overlay */}
-      <div 
+      <div
         className="absolute inset-0 z-0 opacity-30"
         style={{
           backgroundImage: 'url(/hero-bg.jpg)',
@@ -53,7 +53,7 @@ export default function HeroSection({ onCTAClick }: HeroSectionProps) {
 
           {/* CTA Button */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 animate-fade-in-up px-2" style={{ animationDelay: '0.3s' }}>
-            <CTAButton onClick={onCTAClick} size="lg" className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto">
+            <CTAButton onClick={onCTAClick} size="lg" className="px-6 sm:px-8 py-3 sm:py-4 text-base sm:text-lg w-full sm:w-auto pulse-cta">
               Start Your Transformation
             </CTAButton>
           </div>

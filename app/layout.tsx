@@ -3,6 +3,7 @@ import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
 import GoogleAnalytics from '@/components/Analytics'
+import Cursor from '@/components/Cursor'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
@@ -65,6 +66,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="smooth-scroll">
       <body className={`${_geist.variable} ${_geistMono.variable} font-sans antialiased bg-background text-foreground`}>
+        <Cursor />
         {children}
         <Analytics />
         <GoogleAnalytics />

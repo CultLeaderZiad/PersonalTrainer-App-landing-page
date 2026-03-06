@@ -11,9 +11,12 @@ import ValuePropsGrid from '@/components/sections/ValuePropsGrid'
 import HowItWorks from '@/components/sections/HowItWorks'
 import Testimonials from '@/components/sections/Testimonials'
 import VideoTestimonials from '@/components/sections/VideoTestimonials'
+import SuccessTimeline from '@/components/sections/SuccessTimeline'
+import TransformationShowcase from '@/components/sections/TransformationShowcase'
 import FAQ from '@/components/sections/FAQ'
 import CTABanner from '@/components/sections/CTABanner'
 import Newsletter from '@/components/sections/Newsletter'
+import FloatingElements from '@/components/FloatingElements'
 
 export default function Home() {
   const [ctaModalOpen, setCtaModalOpen] = useState(false)
@@ -37,10 +40,13 @@ export default function Home() {
   return (
     <>
       <Navbar onCTAClick={handleCTAClick} />
-      <main className="w-full">
+      <main className="w-full relative">
+        <FloatingElements />
         <HeroSection onCTAClick={handleCTAClick} />
         <ValuePropsGrid />
         <HowItWorks />
+        <SuccessTimeline />
+        <TransformationShowcase />
         <Testimonials />
         <VideoTestimonials />
         <FAQ />

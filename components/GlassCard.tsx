@@ -19,7 +19,7 @@ export default function GlassCard({
     <div
       onClick={onClick}
       className={cn(
-        'glass-card p-6 sm:p-8 rounded-2xl backdrop-blur-xl border border-accent/20 bg-white/5 hover:bg-white/10 transition-all duration-300',
+        'glass-card p-6 sm:p-8 rounded-2xl border border-white/5 bg-white/[0.02] shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] hover:border-accent/20 transition-all duration-500',
         onClick && 'cursor-pointer',
         className
       )}
