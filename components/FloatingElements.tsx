@@ -1,10 +1,11 @@
 'use client'
 
-import React from 'react'
+import React, { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 
 export default function FloatingElements() {
-    const { scrollY } = useScroll()
+    const containerRef = useRef<HTMLDivElement>(null)
+    const { scrollY } = useScroll({ container: containerRef })
 
     const y1 = useTransform(scrollY, [0, 2000], [0, -300])
     const y2 = useTransform(scrollY, [0, 2000], [0, -150])
@@ -12,7 +13,7 @@ export default function FloatingElements() {
     const rotate2 = useTransform(scrollY, [0, 2000], [0, -45])
 
     return (
-        <div className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
+        <div ref={containerRef} className="fixed inset-0 pointer-events-none overflow-hidden z-[-1]">
             <motion.div
                 style={{ y: y1, rotate: rotate1 }}
                 className="absolute top-20 right-[10%] w-64 h-64 border border-amber-500/10 rounded-full blur-sm"
