@@ -10,6 +10,7 @@ import HeroSection from '@/components/sections/HeroSection'
 import ValuePropsGrid from '@/components/sections/ValuePropsGrid'
 import HowItWorks from '@/components/sections/HowItWorks'
 import Testimonials from '@/components/sections/Testimonials'
+import VideoTestimonials from '@/components/sections/VideoTestimonials'
 import FAQ from '@/components/sections/FAQ'
 import CTABanner from '@/components/sections/CTABanner'
 import Newsletter from '@/components/sections/Newsletter'
@@ -41,6 +42,7 @@ export default function Home() {
         <ValuePropsGrid />
         <HowItWorks />
         <Testimonials />
+        <VideoTestimonials />
         <FAQ />
         <Newsletter />
         <CTABanner onCTAClick={handleCTAClick} />

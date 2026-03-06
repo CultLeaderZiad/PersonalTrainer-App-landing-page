@@ -57,24 +57,37 @@ export default function PaymentModal({ isOpen, onClose, price = 197 }: PaymentMo
 
   const handlePayment = async (method: 'stripe' | 'paypal') => {
     setProcessing(true)
-    console.log('[v0] Processing payment:', { method, price, formData })
+
+    if (method === 'stripe') {
+      try {
+        const response = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ price, email: formData.email }),
+        })
+
+        const data = await response.json()
+        if (data.url) {
+          window.location.href = data.url
+        } else {
+          throw new Error(data.error || 'Failed to create checkout session')
+        }
+      } catch (error) {
+        console.error('Stripe error:', error)
+        alert('Payment initialization failed. Please try again.')
+        setProcessing(false)
+      }
+      return
+    }
+
+    // PayPal handling logic will go here
+    console.log('[v0] Processing PayPal payment:', { method, price, formData })
 
     try {
-      // Simulate payment processing
+      // Simulate PayPal for now until Client ID is provided
       await new Promise(resolve => setTimeout(resolve, 2000))
-      
-      // Show success message
-      alert(`Payment of $${price} via ${method === 'stripe' ? 'Credit Card' : 'PayPal'} successful!\n\nYou will receive a confirmation email shortly with your program access details.`)
+      alert(`PayPal payment of $${price} successful!\n\nYou will receive a confirmation email shortly.`)
       setProcessing(false)
-      setShowPaymentForm(false)
-      setSelectedMethod(null)
-      setFormData({
-        cardNumber: '',
-        cardName: '',
-        expiryDate: '',
-        cvv: '',
-        email: ''
-      })
       onClose()
     } catch (error) {
       console.error('[v0] Payment error:', error)
@@ -87,120 +100,53 @@ export default function PaymentModal({ isOpen, onClose, price = 197 }: PaymentMo
 
     return (
       <div className="p-6 space-y-4 animate-fade-in">
-        {selectedMethod === 'stripe' ? (
-          <>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Cardholder Name
-                </label>
-                <input
-                  type="text"
-                  name="cardName"
-                  value={formData.cardName}
-                  onChange={handleInputChange}
-                  className="w-full p-3 bg-background border border-border rounded-lg text-foreground"
-                  placeholder="John Doe"
-                  disabled={processing}
-                />
-              </div>
-              
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Card Number
-                </label>
-                <input
-                  type="text"
-                  name="cardNumber"
-                  value={formData.cardNumber}
-                  onChange={handleInputChange}
-                  className="w-full p-3 bg-background border border-border rounded-lg text-foreground"
-                  placeholder="4242 4242 4242 4242"
-                  disabled={processing}
-                  maxLength={19}
-                />
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    Expiry Date
-                  </label>
-                  <input
-                    type="text"
-                    name="expiryDate"
-                    value={formData.expiryDate}
-                    onChange={handleInputChange}
-                    className="w-full p-3 bg-background border border-border rounded-lg text-foreground"
-                    placeholder="MM/YY"
-                    disabled={processing}
-                  />
-                </div>
-                
-                <div>
-                  <label className="block text-sm font-medium text-foreground mb-2">
-                    CVV
-                  </label>
-                  <input
-                    type="text"
-                    name="cvv"
-                    value={formData.cvv}
-                    onChange={handleInputChange}
-                    className="w-full p-3 bg-background border border-border rounded-lg text-foreground"
-                    placeholder="123"
-                    disabled={processing}
-                    maxLength={4}
-                  />
-                </div>
-              </div>
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Email Address
+            </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              className="w-full p-3 bg-background border border-border rounded-lg text-foreground focus:border-accent outline-none"
+              placeholder="you@example.com"
+              disabled={processing}
+              required
+            />
+            <p className="text-xs text-foreground/60 mt-2">
+              {selectedMethod === 'stripe'
+                ? "We'll send your receipt and access credentials to this email."
+                : "You'll be redirected to PayPal to complete your payment."}
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => handlePayment(selectedMethod)}
+          disabled={processing || !formData.email || !formData.email.includes('@')}
+          className={`w-full p-4 rounded-lg font-bold text-white transition-all transform active:scale-[0.98] ${selectedMethod === 'stripe'
+              ? 'bg-accent hover:bg-amber-600 shadow-lg shadow-amber-500/20'
+              : 'bg-[#0070ba] hover:bg-[#005ea6]'
+            } disabled:opacity-50 disabled:cursor-not-allowed`}
+        >
+          {processing ? (
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              Processing...
             </div>
-            
-            <button
-              onClick={() => handlePayment(selectedMethod)}
-              disabled={processing || !formData.cardNumber || !formData.cardName || !formData.expiryDate || !formData.cvv}
-              className="w-full p-4 bg-accent text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-amber-600 transition-colors"
-            >
-              {processing ? 'Processing...' : `Pay $${price}`}
-            </button>
-          </>
-        ) : (
-          <>
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-foreground mb-2">
-                  Email Address
-                </label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className="w-full p-3 bg-background border border-border rounded-lg text-foreground"
-                  placeholder="you@example.com"
-                  disabled={processing}
-                />
-                <p className="text-xs text-foreground/60 mt-2">
-                  You'll be redirected to PayPal to complete your payment
-                </p>
-              </div>
-            </div>
-            
-            <button
-              onClick={() => handlePayment(selectedMethod)}
-              disabled={processing || !formData.email}
-              className="w-full p-4 bg-[#0070ba] text-white rounded-lg font-semibold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-[#005ea6] transition-colors"
-            >
-              {processing ? 'Processing...' : `Continue with PayPal`}
-            </button>
-          </>
-        )}
-        
+          ) : (
+            `Pay $${price} with ${selectedMethod === 'stripe' ? 'Credit Card' : 'PayPal'}`
+          )}
+        </button>
+
         <button
           onClick={handleBack}
           disabled={processing}
-          className="w-full p-3 text-foreground/70 hover:text-foreground transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full p-3 text-foreground/70 hover:text-foreground transition-colors text-sm"
         >
-          ← Back to payment methods
+          ← Change payment method
         </button>
       </div>
     )
@@ -212,9 +158,9 @@ export default function PaymentModal({ isOpen, onClose, price = 197 }: PaymentMo
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-border/50">
           <h2 className="text-2xl font-bold text-foreground">
-            {showPaymentForm 
-              ? selectedMethod === 'stripe' 
-                ? 'Enter Card Details' 
+            {showPaymentForm
+              ? selectedMethod === 'stripe'
+                ? 'Enter Card Details'
                 : 'PayPal Checkout'
               : 'Choose Payment Method'
             }
@@ -248,11 +194,10 @@ export default function PaymentModal({ isOpen, onClose, price = 197 }: PaymentMo
                   key={method.id}
                   onClick={() => handleMethodSelect(method.id as 'stripe' | 'paypal')}
                   disabled={processing}
-                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${
-                    selectedMethod === method.id
-                      ? 'border-accent bg-accent/10'
-                      : 'border-border hover:border-accent/50'
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className={`w-full p-4 rounded-lg border-2 transition-all text-left ${selectedMethod === method.id
+                    ? 'border-accent bg-accent/10'
+                    : 'border-border hover:border-accent/50'
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   <div className="flex items-center gap-3">
                     <span className="text-2xl">{method.icon}</span>

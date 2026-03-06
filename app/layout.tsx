@@ -2,6 +2,7 @@ import React from "react"
 import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 import { Analytics } from '@vercel/analytics/next'
+import GoogleAnalytics from '@/components/Analytics'
 import './globals.css'
 
 const _geist = Geist({ subsets: ["latin"], variable: '--font-sans' });
@@ -66,6 +67,7 @@ export default function RootLayout({
       <body className={`${_geist.variable} ${_geistMono.variable} font-sans antialiased bg-background text-foreground`}>
         {children}
         <Analytics />
+        <GoogleAnalytics />
       </body>
     </html>
   )

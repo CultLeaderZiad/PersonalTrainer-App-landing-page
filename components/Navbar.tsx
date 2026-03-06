@@ -5,15 +5,12 @@ import Link from 'next/link'
 import CTAButton from './CTAButton'
 import Container from './Container'
 import CountdownTimer from './CountdownTimer'
-import LanguageSwitcher from './LanguageSwitcher' // Import LanguageSwitcher
-
 interface NavbarProps {
   onCTAClick?: () => void
 }
 
 export default function Navbar({ onCTAClick }: NavbarProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [language, setLanguage] = useState('en') // Declare language and setLanguage
 
   const navLinks = [
     { label: 'About', href: '#value-props' },
